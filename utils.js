@@ -135,7 +135,10 @@ export async function processPostRequest(data) {
       'Debe ingresar los siguientes datos: NOMBRE_PRODUCTO PRECIO CATEGORIA en ese orden preciso.',
     );
   } else {
-    product = parseProductData(data);
+    const parsedProduct = parseProductData(data);
+    if (parsedProduct) {
+      product = postProduct(parsedProduct);
+    }
   }
 
   return product;
@@ -151,7 +154,10 @@ export async function processUpdateRequest(id, data) {
       'Debe ingresar los siguientes datos: NOMBRE_PRODUCTO PRECIO CATEGORIA en ese orden preciso.',
     );
   } else {
-    product = parseProductData(data);
+    const parsedProduct = parseProductData(data);
+    if (parsedProduct) {
+      product = updateProductById(id, parsedProduct);
+    }
   }
 
   return product;
