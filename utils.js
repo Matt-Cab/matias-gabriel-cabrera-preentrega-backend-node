@@ -114,63 +114,47 @@ async function deleteProductById(id) {
 }
 
 export async function processGetRequest(id) {
-  let products = null;
-
   if (id === undefined) {
-    products = await getProducts();
-  } else if (isValidId(id)) {
-    products = await getProductByID(id);
-  } else {
-    console.log('Id no válido, debe ingresar un numero entero positivo');
+    return await getProducts();
   }
 
-  return products;
+  if (isValidId(id)) {
+    return await getProductByID(id);
+  }
+
+  console.log('Id no válido, debe ingresar un numero entero positivo');
+
+  return null;
 }
 
 export async function processPostRequest(data) {
-  let product = null;
-
-  if (data.length !== 3) {
-    console.log(
-      'Debe ingresar los siguientes datos: NOMBRE_PRODUCTO PRECIO CATEGORIA en ese orden preciso.',
-    );
-  } else {
-    const parsedProduct = parseProductData(data);
-    if (parsedProduct) {
-      product = postProduct(parsedProduct);
-    }
+  const parsedProduct = parseProductData(data);
+  if (!parsedProduct) {
+    return null;
   }
 
-  return product;
+  return await postProduct(parsedProduct);
 }
 
 export async function processUpdateRequest(id, data) {
-  let product = null;
-
   if (!isValidId(id)) {
     console.log('Id no válido, debe ingresar un numero entero positivo');
-  } else if (data.length !== 3) {
-    console.log(
-      'Debe ingresar los siguientes datos: NOMBRE_PRODUCTO PRECIO CATEGORIA en ese orden preciso.',
-    );
-  } else {
-    const parsedProduct = parseProductData(data);
-    if (parsedProduct) {
-      product = updateProductById(id, parsedProduct);
-    }
+    return null;
   }
 
-  return product;
+  const parsedProduct = parseProductData(data);
+  if (!parsedProduct) {
+    return null;
+  }
+
+  return await updateProductById(id, parsedProduct);
 }
 
 export async function processDeleteRequest(id) {
-  let product = null;
-
   if (isValidId(id)) {
-    product = await deleteProductById(id);
-  } else {
-    console.log('Id no válido, debe ingresar un numero entero positivo');
+    return await deleteProductById(id);
   }
+  console.log('Id no válido, debe ingresar un numero entero positivo');
 
-  return product;
+  return null;
 }

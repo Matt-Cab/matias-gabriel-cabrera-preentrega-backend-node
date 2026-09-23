@@ -28,7 +28,10 @@ async function main() {
     case 'POST': {
       const productSaved = await processPostRequest(data);
       if (productSaved) {
-        console.log('Producto agregado correctamente:', productSaved);
+        console.log(
+          'Producto agregado correctamente, ID del producto:',
+          productSaved.id,
+        );
       }
       break;
     }
