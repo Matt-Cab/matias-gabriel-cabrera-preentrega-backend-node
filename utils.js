@@ -25,92 +25,45 @@ function parseProductData(data) {
   return { title, price, category };
 }
 
-async function getProducts() {
+async function apiFetch(endpoint, options = {}) {
   try {
-    const response = await fetch(`${API_URL}/${MAIN_PATH}`);
+    const response = await fetch(`${API_URL}/${endpoint}`, options);
     if (!response.ok) {
-      throw new Error('Error al intentar obtener los productos');
+      throw new Error(`Error en la petición: ${response.statusText}`);
     }
-
-    const data = await response.json();
-    return data;
+    return await response.json();
   } catch (error) {
-    console.log(error.message);
+    console.error(`[API Error]: ${error.message}`);
     return null;
   }
+}
+
+async function getProducts() {
+  return apiFetch(MAIN_PATH);
 }
 
 async function getProductByID(id) {
-  try {
-    const response = await fetch(`${API_URL}/${MAIN_PATH}/${id}`);
-    if (!response.ok) {
-      throw new Error('Error al intentar obtener el producto indicado.');
-    }
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.log(error.message);
-    return null;
-  }
+  return apiFetch(`${MAIN_PATH}/${id}`);
 }
 
 async function postProduct(product) {
-  try {
-    const response = await fetch(`${API_URL}/${MAIN_PATH}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(product),
-    });
-
-    if (!response.ok) {
-      throw new Error('Error al intentar guardar el producto indicado.');
-    }
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.log(error.message);
-    return null;
-  }
+  return apiFetch(MAIN_PATH, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(product),
+  });
 }
 
 async function updateProductById(id, updatedData) {
-  try {
-    const response = await fetch(`${API_URL}/${MAIN_PATH}/${id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(updatedData),
-    });
-
-    if (!response.ok) {
-      throw new Error('Error al intentar actualizar el producto.');
-    }
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.log(error.message);
-    return null;
-  }
+  return apiFetch(`${MAIN_PATH}/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(updatedData),
+  });
 }
 
 async function deleteProductById(id) {
-  try {
-    const response = await fetch(`${API_URL}/${MAIN_PATH}/${id}`, {
-      method: 'DELETE',
-    });
-
-    if (!response.ok) {
-      throw new Error('Error al intentar eliminar el producto indicado.');
-    }
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.log(error.message);
-    return null;
-  }
+  return apiFetch(`${MAIN_PATH}/${id}`, { method: 'DELETE' });
 }
 
 export async function processGetRequest(id) {
