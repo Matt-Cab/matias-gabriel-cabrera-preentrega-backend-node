@@ -8,8 +8,9 @@ import {
 
 const args = process.argv.slice(2);
 const request = args[0]?.toUpperCase();
-const [path, id] = args[1]?.split('/') || [];
-const data = args?.slice(2);
+const routeInput = args[1] || '';
+const [path, id] = routeInput.includes('/') ? routeInput.split('/') : [routeInput, undefined];
+const data = args.slice(2); 
 
 async function main() {
   if (path !== MAIN_PATH) {
